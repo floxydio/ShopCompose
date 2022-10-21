@@ -3,14 +3,18 @@ package com.example.shopcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -35,7 +39,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
 fun HomeScreen() {
     val navController = rememberNavController()
@@ -51,17 +54,59 @@ fun HomeScreen() {
     }
 }
 
+
 @Composable
 fun HomePages(navController: NavController) {
-    Column() {
-        Text("Home Screen")
+    Column (modifier = Modifier.padding(top=20.dp, start = 15.dp, end = 15.dp)) {
+        CardTheme()
+        Spacer(modifier = Modifier.height(10.dp))
+        SearchPage()
 
-        Button(onClick = {
-            navController.navigate("detail/2")
-        }) {
-            Text(text = "Go to Another Page")
+//        Button(onClick = {
+//            navController.navigate("detail/2")
+//        }) {
+//            Text(text = "Go to Another Page")
+//        }
+    }
+}
+
+@Composable
+fun CardTheme() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        elevation = 1.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(start=20.dp,end=20.dp, bottom = 30.dp, top = 30.dp)
+        ) {
+            Text("Hello Dio Rovelino",fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(5.dp))
+            Text("Let's Find What you needed", fontSize = 14.sp, fontWeight = FontWeight.Light)
         }
     }
+}
+
+@Composable
+fun SearchPage() {
+    var searchMarket by remember {
+        mutableStateOf("")
+    }
+    TextField(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        singleLine = true,
+        colors = TextFieldDefaults.textFieldColors(
+            cursorColor = Color.Black,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+        trailingIcon = {
+          Icon(Icons.Outlined.Search, contentDescription = null)
+        },
+        value = searchMarket , onValueChange = {
+        searchMarket = it
+    } )
 }
 
 @Composable
