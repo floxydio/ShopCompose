@@ -3,7 +3,10 @@ package com.example.shopcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -21,9 +24,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import com.example.shopcompose.models.DataModelElement
 import com.example.shopcompose.ui.theme.ShopComposeTheme
+import com.example.shopcompose.vm.MarketModel
 
 class MainActivity : ComponentActivity() {
+    val marketViewModel by viewModels<MarketModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -33,18 +39,19 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    HomeScreen()
+                    HomeScreen(marketList = marketViewModel.marketDataRes)
+                    marketViewModel.getMarketList()
                 }
             }
         }
     }
 }
 @Composable
-fun HomeScreen() {
+fun HomeScreen(marketList: List<DataModelElement>) {
     val navController = rememberNavController()
     NavHost(navController, startDestination = "home") {
         composable(route ="home") {
-            HomePages(navController)
+            HomePages(navController,marketList)
         }
         composable(route="detail/{id}", arguments = listOf(navArgument("id") {
             type = NavType.StringType
@@ -56,17 +63,35 @@ fun HomeScreen() {
 
 
 @Composable
-fun HomePages(navController: NavController) {
+fun HomePages(navController: NavController, marketList: List<DataModelElement>) {
     Column (modifier = Modifier.padding(top=20.dp, start = 15.dp, end = 15.dp)) {
         CardTheme()
         Spacer(modifier = Modifier.height(10.dp))
         SearchPage()
+        MarketList(marketList = marketList )
 
 //        Button(onClick = {
 //            navController.navigate("detail/2")
 //        }) {
 //            Text(text = "Go to Another Page")
 //        }
+    }
+}
+
+
+@Composable
+fun MarketList(marketList: List<DataModelElement>) {
+    LazyColumn {
+        itemsIndexed(items = marketList) {
+            index, item -> Card(modifier = Modifier.fillMaxWidth()) {
+                Column() {
+                    Text(item.title, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier= Modifier.height(10.dp))
+                    Text(item.description, fontSize = 14.sp)
+                }
+
+        }
+        }
     }
 }
 

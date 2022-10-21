@@ -18,11 +18,11 @@ class MarketModel : ViewModel()  {
             val apiService = Apiinterface.getInstance()
             try {
                 val marketList = apiService.getMarket()
+                marketDataRes = marketList
             } catch (e: Exception) {
                 errorMessage = e.toString()
             }
 
         }
     }
-
 }
